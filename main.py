@@ -6,10 +6,10 @@ import os
 import pygame
 import math
 import numpy as np
-from dataDeal import DataDeal
-from boat import Boat
-from boatMathModel import Boat_Math_Model
-from model import Model
+from bb.dataDeal import DataDeal
+from bb.boat import Boat
+from bb.boatMathModel import Boat_Math_Model
+from bb.model import Model
 
 # 背景
 background = pygame.image.load('./pictures/sea.jpg')
@@ -48,11 +48,11 @@ screen.fill([255, 255, 255])
 clock = pygame.time.Clock()
 
 # 己方船舶模型
-boat_self_model = Boat('./pictures/boat.jpg', 0, 800, 750, 4)
+boat_self_model = Boat('./pictures/boat.jpg', 0, 600, 750, 4)     #对遇0，600，750  右 0, 600, 750, 左0, 900, 650,
 boat_self_instance = boat_self_model.get_boat_instance()
 
 # 目标船舶模型
-boat_target_model = Boat('./pictures/boat.jpg', 180, 750, 150, 4)
+boat_target_model = Boat('./pictures/boat.jpg', 135, 800, 150, 4)   #对遇180,600,150   右135, 800, 150    左225, 700, 150
 boat_target_instance = boat_target_model.get_boat_instance()
 
 # 两船相对运动模型
@@ -76,6 +76,9 @@ finish = 0
 self_list = []
 target_list = []
 
+# 会遇态势
+encounter_situation = 0
+
 # 船舶开始航行
 running = True
 while running:
@@ -98,7 +101,8 @@ while running:
     self_list.append((int(boat_self_model.boat_head_x), int(boat_self_model.boat_head_y)))
     target_list.append((int(boat_target_model.boat_head_x), int(boat_target_model.boat_head_y)))
     # 当前会遇态势 DCPA TCPA
-    encounter_situation = boat_math_model.encounter_situation()
+    if 0 == encounter_situation:
+        encounter_situation = boat_math_model.encounter_situation()
     boat_math_model.danger_calculate(encounter_situation)
 
     original_data[0][0] = boat_target_model.boat_angle
@@ -117,31 +121,59 @@ while running:
         resume = 1
 
     # 对遇情况的方向选择
+    # 对遇
     if now_condition == danger_condition and encounter_situation == opposite_direction:
         if boat_self_model.boat_head_x > boat_target_model.boat_head_x:
             select_option = right_cross
         else:
             select_option = left_cross
-        if math.fabs(boat_self_model.boat_x_location - boat_target_model.boat_x_location) > 150:
+        if math.fabs(
+                boat_self_model.boat_x_location - boat_target_model.boat_x_location) > 150 and boat_self_model.boat_angle == boat_self_model.boat_original_angle:
             resume = 0
+    # 右弦交叉
+    elif now_condition == danger_condition and encounter_situation == right_cross:
+        select_option = right_cross
+        # if 可以安全通过
+
+    #左弦
+    elif now_condition == danger_condition and encounter_situation == left_cross:
+        select_option = right_cross
+
 
     # 己方船舶与目标船舶移动
     boat_self_model.move()
     boat_target_model.move()
-    if resume == 1 and now_condition == danger_condition:
-        boat_self_model.angle_move(select_option)
-        now_condition = boat_math_model.get_risk_index(safe_distance)
-        if now_condition == 0 and select_option == turn_left:
-            select_option = turn_right
-        elif now_condition == 0 and select_option == turn_right:
-            select_option = turn_left
-    elif resume == 1 and now_condition == safe_condition:
-        boat_self_model.angle_move(select_option)
-        print(boat_self_model.boat_angle)
-        if boat_self_model.boat_angle == 0 or boat_self_model.boat_angle == 360:
-            finish = 1
-            resume = 0
-            select_option = 0
+    print(str(resume) + ' ' + str(now_condition))
+    if encounter_situation==left_cross:
+        if resume == 1 and now_condition == danger_condition:
+            boat_target_model.angle_move(select_option)
+            now_condition = boat_math_model.get_risk_index(safe_distance, encounter_situation)
+            if now_condition == 0:
+                select_option = turn_left
+        elif resume == 1 and now_condition == safe_condition:
+            # select_option = turn_right
+            print(select_option)
+            boat_target_model.angle_move(select_option)
+            if boat_target_model.boat_angle == boat_target_model.boat_original_angle or boat_target_model.boat_angle == 360 + boat_target_model.boat_original_angle:
+                finish = 1
+                resume = 0
+                select_option = 0
+                encounter_situation = 0
+    else:
+        if resume == 1 and now_condition == danger_condition:
+            boat_self_model.angle_move(select_option)
+            now_condition = boat_math_model.get_risk_index(safe_distance, encounter_situation)
+            if now_condition == 0 and select_option == turn_left:
+                select_option = turn_right
+            elif now_condition == 0 and select_option == turn_right:
+                select_option = turn_left
+        elif resume == 1 and now_condition == safe_condition:
+            boat_self_model.angle_move(select_option)
+            if boat_self_model.boat_angle == boat_self_model.boat_original_angle or boat_self_model.boat_angle == 360 + boat_self_model.boat_original_angle:
+                finish = 1
+                resume = 0
+                select_option = 0
+                encounter_situation = 0
 
     boat_self_instance = boat_self_model.get_boat_instance()
     boat_target_instance = boat_target_model.get_boat_instance()

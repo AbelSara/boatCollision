@@ -15,7 +15,7 @@ class Boat_Math_Model:
         self.main_boat = self_boat
         self.target_boat = target_boat
 
-    # 计算会遇态势
+    # 计算会遇态势.
     def encounter_situation(self):
         encounter = 0
         if self.main_boat.boat_angle == self.target_boat.boat_angle:
@@ -32,7 +32,7 @@ class Boat_Math_Model:
             encounter = right_cross
         return encounter
 
-    def get_risk_index(self, safe_distance):
+    def get_risk_index(self, safe_distance, encounter_situation):
         # 本船中心
         main_rect = self.main_boat.boat_instance.get_rect()
         main_binary_width = main_rect.width / 2
@@ -49,11 +49,21 @@ class Boat_Math_Model:
 
         # 中心距离
         mid_distance = math.sqrt(math.pow(target_mid_y - main_mid_y, 2) + math.pow(target_mid_x - main_mid_x, 2))
-        # print('mid distance : ' + str(mid_distance) + ' safe distance : ' + str(safe_distance) + ' angle : ' + str(
-        #     self.main_boat.boat_angle))
-        if mid_distance >= safe_distance * 2 and self.main_boat.boat_angle == 300:
+        print('mid distance : ' + str(mid_distance) + ' safe distance : ' + str(safe_distance) + ' angle : ' + str(
+            self.main_boat.boat_angle)+' '+str(self.main_boat.right_limit)+' '+str(self.main_boat.left_limit))
+        if encounter_situation != left_cross and mid_distance >= safe_distance * 2 and self.main_boat.boat_angle == self.main_boat.left_limit:
+            return 0
+        elif encounter_situation != left_cross and mid_distance >= safe_distance * 2 and self.main_boat.boat_angle == self.main_boat.right_limit:
+            return 0
+        elif encounter_situation != left_cross:
+            return 1
+
+        if encounter_situation == left_cross and mid_distance >= safe_distance * 2 and self.target_boat.boat_angle == self.target_boat.left_limit:
+            return 0
+        elif encounter_situation == left_cross and mid_distance >= safe_distance * 2 and self.target_boat.boat_angle == self.target_boat.right_limit:
             return 0
         else:
+            print('enter')
             return 1
 
     def get_relative_distance(self):

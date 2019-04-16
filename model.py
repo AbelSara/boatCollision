@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding:utf-/ -*-
 __author__ = '&USER'
-from dataDeal import DataDeal
-from layer import Layer
+from bb.dataDeal import DataDeal
+from bb.layer import Layer
 import tensorflow as tf
 import numpy as np
 
@@ -105,7 +105,7 @@ class Model:
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
 
-            # 模型保存
+            # 模型保存.
             saver = tf.train.Saver(max_to_keep=1)
             writer = tf.summary.FileWriter('logs/', sess.graph)
             for epoch in range(self.n_batch):

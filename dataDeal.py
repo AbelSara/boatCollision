@@ -7,6 +7,7 @@ import numpy as np
 np.set_printoptions(suppress=True)
 
 
+# 数据处理
 class DataDeal:
     def __init__(self):
         self.train_data = self.readData(6)

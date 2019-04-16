@@ -4,7 +4,7 @@ __author__ = '&USER'
 import pygame
 import math
 
-# 避碰方向
+# 避碰方向.
 turn_right = 2
 turn_left = 3
 
@@ -32,6 +32,17 @@ class Boat:
         self.boat_original_instance = pygame.image.load(self.boat_image).convert()
         self.boat_instance = pygame.transform.rotate(self.boat_original_instance, self.boat_angle)
         self.boat_head_x, self.boat_head_y = self.get_boat_head()
+
+        self.boat_original_angle = angle
+        if 60 < self.boat_original_angle < 300:
+            self.left_limit = self.boat_original_angle + 60
+            self.right_limit = self.boat_original_angle - 60
+        elif 0 <= self.boat_original_angle <= 60:
+            self.left_limit = self.boat_original_angle + 60
+            self.right_limit = self.boat_original_angle + 300
+        elif 300 <= self.boat_original_angle <= 360:
+            self.left_limit = self.boat_original_angle - 300
+            self.right_limit = self.boat_original_angle - 60
 
     def get_boat_head(self):
         rect = self.boat_instance.get_rect()
@@ -75,7 +86,7 @@ class Boat:
 
     def angle_move(self, direction):
         flag = 1
-        if self.boat_angle == 60 and direction == turn_left or 300 == self.boat_angle and direction == turn_right:
+        if self.boat_angle == self.left_limit and direction == turn_left or self.right_limit == self.boat_angle and direction == turn_right:
             flag = 0
         if 1 == flag and turn_right == direction:
             if self.boat_angle == 0:
