@@ -4,6 +4,13 @@ __author__ = '&USER'
 import pygame
 import math
 
+# 避碰方向
+turn_right = 2
+turn_left = 3
+
+# 角度偏转大小
+turn_angle = 1.5
+
 
 class Boat:
     def __init__(self, image, angle, x_location, y_location, speed):
@@ -65,10 +72,17 @@ class Boat:
             self.boat_y_location -= self.speed * math.fabs(math.cos(self.boat_angle_radians))
         # 每次移动之后计算新的头部位置
         self.boat_head_x, self.boat_head_y = self.get_boat_head()
-        print("x_location is:" + str(self.boat_x_location) + " y_location is:" + str(self.boat_y_location))
 
-    def angle_move(self):
-        if self.boat_angle == 0:
-            self.boat_angle = 360
-        self.boat_angle = self.boat_angle - 1
+    def angle_move(self, direction):
+        flag = 1
+        if self.boat_angle == 60 and direction == turn_left or 300 == self.boat_angle and direction == turn_right:
+            flag = 0
+        if 1 == flag and turn_right == direction:
+            if self.boat_angle == 0:
+                self.boat_angle = 360
+            self.boat_angle = self.boat_angle - turn_angle
+        elif 1 == flag and turn_left == direction:
+            if self.boat_angle == 360:
+                self.boat_angle = 0
+            self.boat_angle = self.boat_angle + turn_angle
         self.boat_instance = pygame.transform.rotate(self.boat_original_instance, self.boat_angle)

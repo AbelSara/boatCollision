@@ -8,6 +8,11 @@ np.set_printoptions(suppress=True)
 
 
 class DataDeal:
+    def __init__(self):
+        self.train_data = self.readData(6)
+        self.min_array, self.max_array = self.get_min_max()
+        self.train_data = self.normalization(self.train_data)
+
     def readData(self, column_shape):
         train_data = pd.read_csv('data.csv')
         train_data = np.array(train_data)
@@ -26,16 +31,27 @@ class DataDeal:
                 res_data[i][j] = agent_data[column_index]
         return res_data
 
+    def get_min_max(self):
+        return self.train_data.min(0), self.train_data.max(0)
+
     def normalization(self, train_data):
         res_data = np.zeros(train_data.shape)
-        min_array = train_data.min(0)
-        max_array = train_data.max(0)
         row_shape = train_data.shape[0]
         column_shape = train_data.shape[1]
         for i in range(column_shape):
-            minus = max_array[i] - min_array[i]
+            minus = self.max_array[i] - self.min_array[i]
             for j in range(row_shape):
-                res_data[j][i] = (train_data[j][i] - min_array[i]) / minus
+                res_data[j][i] = (train_data[j][i] - self.min_array[i]) / minus
+        return res_data
+
+    def get_instance_data(self, original_data):
+        res_data = np.zeros(original_data.shape)
+        row_shape = original_data.shape[0]
+        column_shape = original_data.shape[1]
+        for i in range(column_shape):
+            minus = self.max_array[i] - self.min_array[i]
+            for j in range(row_shape):
+                res_data[j][i] = (original_data[j][i] - self.min_array[i]) / minus
         return res_data
 
     def preTreatment(self, train_data):

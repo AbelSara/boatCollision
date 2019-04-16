@@ -129,4 +129,7 @@ class Model:
                 x_input = graph.get_tensor_by_name('input/x_input:0')
                 prediction = graph.get_tensor_by_name('layer_3/prediction/prediction:0')
                 saver.restore(sess, tf.train.latest_checkpoint('./model/'))
-                return sess.run(prediction, feed_dict={x_input: sample})
+                risk_index = sess.run(prediction, feed_dict={x_input: sample})
+                if risk_index > 1:
+                    risk_index = 1
+                return risk_index
