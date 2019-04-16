@@ -44,7 +44,7 @@ pygame.init()
 screen = pygame.display.set_mode([1500, 973])
 screen.fill([255, 255, 255])
 
-# 时钟
+# pygame时钟
 clock = pygame.time.Clock()
 
 # 己方船舶模型
