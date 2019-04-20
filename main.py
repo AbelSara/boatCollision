@@ -11,7 +11,7 @@ from boat import Boat
 from boatMathModel import Boat_Math_Model
 from model import Model
 
-# 背景。。。
+# 背景
 background = pygame.image.load('./pictures/sea.jpg')
 
 # 有避碰危险时的方向处理
