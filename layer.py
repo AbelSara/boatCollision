@@ -3,7 +3,7 @@
 __author__ = '&USER'
 import tensorflow as tf
 
-
+#
 class Layer:
     def weight_variable(self, shape, name):
         weights = tf.Variable(tf.random_normal(shape=shape), name=name)

@@ -8,7 +8,7 @@ import numpy as np
 
 
 class Model:
-    # 梯度
+    # 梯度。
     gradient = 0.01
 
     # 迭代次数

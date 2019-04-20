@@ -3,7 +3,7 @@
 __author__ = '&USER'
 import math
 
-# 四种会遇态势
+# 四种会遇态势。
 overtaking = 1
 right_cross = 2
 left_cross = 3

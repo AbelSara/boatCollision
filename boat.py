@@ -8,7 +8,7 @@ import math
 turn_right = 2
 turn_left = 3
 
-# 角度偏转大小
+# 角度偏转大小。
 turn_angle = 1.5
 
 
