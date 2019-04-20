@@ -48,11 +48,11 @@ screen.fill([255, 255, 255])
 clock = pygame.time.Clock()
 
 # 己方船舶模型
-boat_self_model = Boat('./pictures/boat.jpg', 0, 600, 750, 4)     #对遇0,600,750  右 0, 600, 750, 左0, 900, 650,   追越0,600,900, 9
+boat_self_model = Boat('./pictures/boat.jpg', 0,600,900, 9)     #对遇0,600,750  右 0, 600, 750, 左0, 900, 650,
 boat_self_instance = boat_self_model.get_boat_instance()
 
 # 目标船舶模型
-boat_target_model = Boat('./pictures/boat.jpg', 135, 800, 150, 4)   #对遇180,600,150   右135, 800, 150    左225, 700, 150   追越0,600,350, 2
+boat_target_model = Boat('./pictures/boat.jpg', 0,600,350, 2)   #对遇180,600,150   右135, 800, 150    左225, 700, 150
 boat_target_instance = boat_target_model.get_boat_instance()
 
 # 两船相对运动模型
@@ -142,8 +142,7 @@ while running:
         # if 可以安全通过
         if math.fabs(boat_self_model.boat_x_location - boat_target_model.boat_x_location) > 150 and math.fabs(boat_self_model.boat_y_location - boat_target_model.boat_y_location) > 50 and boat_self_model.boat_angle == boat_self_model.boat_original_angle:
             resume = 0
-
-    # 追越
+    #追越
     elif now_condition == danger_condition and encounter_situation == overtaking:
         select_option = right_cross
         if math.fabs(boat_self_model.boat_x_location - boat_target_model.boat_x_location) > 150 and boat_self_model.boat_angle == boat_self_model.boat_original_angle:

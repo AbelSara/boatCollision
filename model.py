@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding:utf-/ -*-
 __author__ = '&USER'
-from bb.dataDeal import DataDeal
-from bb.layer import Layer
+from dataDeal import DataDeal
+from layer import Layer
 import tensorflow as tf
 import numpy as np
 
