@@ -97,3 +97,8 @@ class Boat:
                 self.boat_angle = 0
             self.boat_angle = self.boat_angle + turn_angle
         self.boat_instance = pygame.transform.rotate(self.boat_original_instance, self.boat_angle)
+
+    def state_finish(self):
+        if self.boat_head_x < 0 or self.boat_head_y < 0:
+            return 1
+        return 0
