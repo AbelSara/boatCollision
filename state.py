@@ -80,7 +80,8 @@ class State:
 
             # 重绘己方船舶与目标船舶
             screen.fill([255, 255, 255])
-            # screen.blit(background, (0, 0))
+            background = pygame.image.load("./pictures/sea.jpg")
+            screen.blit(background, (0, 0))
             screen.blit(boat_self_instance, (boat_main_model.boat_x_location, boat_main_model.boat_y_location))
             screen.blit(boat_target_instance, (boat_target_model.boat_x_location, boat_target_model.boat_y_location))
             for i in range(len(self_list)):
